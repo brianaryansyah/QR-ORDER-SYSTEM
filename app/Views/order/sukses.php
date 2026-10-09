@@ -7,10 +7,6 @@ $storeFavicon     = app_setting('store_favicon', '');
 $storeDescription = app_setting('store_description', 'Terima kasih sudah memesan.');
 $storeWhatsapp    = app_setting('store_whatsapp', '');
 
-$logoSrc = ! empty($storeLogo)
-    ? base_url($storeLogo)
-    : base_url('assets/img/logo_k.png');
-
 $faviconPath = ! empty($storeFavicon)
     ? $storeFavicon
     : (! empty($storeLogo) ? $storeLogo : 'assets/img/logo_k.png');
@@ -154,36 +150,6 @@ if (! empty($storeWhatsapp)) {
             text-align: center;
             padding: 30px 22px 24px;
             border-bottom: 1px solid #FED7AA;
-        }
-
-        .logo {
-            width: 58px;
-            height: 58px;
-            border-radius: 22px;
-            background: #FFF7ED;
-            border: 1px solid #FED7AA;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            margin: 0 auto 18px;
-        }
-
-        .logo img {
-            width: 48px;
-            height: 48px;
-            object-fit: contain;
-        }
-
-        .logo-fallback {
-            display: none;
-            width: 48px;
-            height: 48px;
-            border-radius: 18px;
-            background: #EA580C;
-            align-items: center;
-            justify-content: center;
-            color: #000000;
         }
 
         .icon-circle {
@@ -555,16 +521,6 @@ if (! empty($storeWhatsapp)) {
     <div class="card">
 
         <div class="status-header">
-            <div class="logo">
-                <img src="<?= esc($logoSrc) ?>"
-                     alt="Logo <?= esc($storeName) ?>"
-                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-
-                <div class="logo-fallback">
-                    <i class="fa-solid fa-store"></i>
-                </div>
-            </div>
-
             <?php if ($isSelesai): ?>
                 <h1 class="status-title">Pesanan Diproses!</h1>
 
