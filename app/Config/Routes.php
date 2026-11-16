@@ -109,6 +109,7 @@ $routes->group('kasir', ['filter' => 'role:kasir,admin'], function ($routes) {
     // Status pesanan
     $routes->post('selesai/(:num)', 'Kasir\Dashboard::selesai/$1');
     $routes->post('siap/(:num)',    'Kasir\Dashboard::siap/$1');
+    $routes->post('tuntaskan/(:num)', 'Kasir\Dashboard::tuntaskan/$1');
 
     // Live check
     $routes->get('cek_baru/(:num)',         'Kasir\Dashboard::cek_baru/$1');

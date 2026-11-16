@@ -69,7 +69,7 @@ class PesananModel extends Model
 
     public function getSelesaiHariIni(): int
     {
-        return $this->where('status_pesanan', 'siap')
+        return $this->whereIn('status_pesanan', ['siap', 'selesai'])
             ->where('DATE(waktu_siap)', date('Y-m-d'))
             ->countAllResults();
     }

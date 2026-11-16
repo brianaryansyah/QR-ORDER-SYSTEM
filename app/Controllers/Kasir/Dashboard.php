@@ -257,4 +257,37 @@ class Dashboard extends BaseController
             ->to(base_url('kasir/dashboard'))
             ->with('success', 'Pesanan nomor antrian ' . $nomorAntrian . ' sudah siap diantarkan.');
     }
+
+    public function tuntaskan(int $id)
+    {
+        $pesanan = $this->pesananModel->find($id);
+
+        if (! $pesanan) {
+            return redirect()
+                ->to(base_url('kasir/riwayat'))
+                ->with('error', 'Pesanan tidak ditemukan.');
+        }
+
+        if (($pesanan['status_pesanan'] ?? '') !== 'siap') {
+            return redirect()
+                ->to(base_url('kasir/riwayat'))
+                ->with('error', 'Pesanan belum berstatus siap diantarkan.');
+        }
+
+        if (($pesanan['status'] ?? '') !== 'selesai') {
+            return redirect()
+                ->to(base_url('kasir/riwayat'))
+                ->with('error', 'Pembayaran pesanan belum lunas.');
+        }
+
+        $this->pesananModel->update($id, [
+            'status_pesanan' => 'selesai',
+        ]);
+
+        $nomorAntrian = $pesanan['nomor_antrian'] ?? '-';
+
+        return redirect()
+            ->to(base_url('kasir/riwayat'))
+            ->with('success', 'Pesanan nomor antrian ' . $nomorAntrian . ' sudah selesai.');
+    }
 }
