@@ -124,7 +124,7 @@ $paymentLabel = static function (?string $metode): string {
             </div>
 
             <button type="submit"
-                    class="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#EA580C] px-5 py-3 text-sm font-bold text-[#000000] shadow-sm hover:opacity-95 transition">
+                    class="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#EA580C] px-5 py-3 text-sm font-bold text-white shadow-sm hover:bg-[#C2410C] transition">
                 <i class="fa-solid fa-filter"></i>
                 Terapkan
             </button>

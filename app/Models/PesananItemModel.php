@@ -16,4 +16,26 @@ class PesananItemModel extends Model
     {
         return $this->where('pesanan_id', $pesananId)->findAll();
     }
+
+    /**
+     * Batch fetch items for multiple pesanan IDs to eliminate N+1 queries.
+     *
+     * @param array<int> $pesananIds
+     * @return array<int, array> [pesanan_id => [items...]]
+     */
+    public function getByPesananIds(array $pesananIds): array
+    {
+        if (empty($pesananIds)) {
+            return [];
+        }
+
+        $items = $this->whereIn('pesanan_id', $pesananIds)->findAll();
+        $grouped = [];
+
+        foreach ($items as $item) {
+            $grouped[(int) $item['pesanan_id']][] = $item;
+        }
+
+        return $grouped;
+    }
 }

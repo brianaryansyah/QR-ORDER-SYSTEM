@@ -64,7 +64,21 @@ $kodeMeja  = $meja['kode_unik'] ?? '';
             background: #FFF7ED;
             color: var(--text);
             -webkit-font-smoothing: antialiased;
-            padding-bottom: 112px;
+            padding-bottom: calc(112px + env(safe-area-inset-bottom));
+        }
+
+        :where(button, a, input, textarea, label):focus-visible {
+            outline: 3px solid rgba(234, 88, 12, .35);
+            outline-offset: 2px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: .01ms !important;
+                scroll-behavior: auto !important;
+            }
         }
 
         body::before {
@@ -483,6 +497,13 @@ $kodeMeja  = $meja['kode_unik'] ?? '';
             color: var(--rose);
         }
 
+        .form-group label .label-optional {
+            color: var(--muted-2);
+            font-weight: 700;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
         .form-control {
             width: 100%;
             background: #FFFFFF;
@@ -550,8 +571,8 @@ $kodeMeja  = $meja['kode_unik'] ?? '';
             z-index: 40;
             display: flex;
             justify-content: center;
-            padding: 14px 16px 18px;
-            background: rgba(255, 255, 255, 0.9);
+            padding: 14px 16px calc(18px + env(safe-area-inset-bottom));
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(18px);
             -webkit-backdrop-filter: blur(18px);
             border-top: 1px solid #FED7AA;
@@ -732,7 +753,7 @@ $kodeMeja  = $meja['kode_unik'] ?? '';
                 <div class="hero-content">
                     <div class="badge">
                         <i class="fa-solid fa-clipboard-check"></i>
-                        Checkout
+                        Konfirmasi
                     </div>
 
                     <h2 class="hero-title">
@@ -777,12 +798,12 @@ $kodeMeja  = $meja['kode_unik'] ?? '';
             </section>
 
             <section class="section-card">
-                <h3 class="section-title">
+                <h3 class="section-title" id="payment-heading">
                     <i class="fa-solid fa-wallet"></i>
                     Metode Pembayaran
                 </h3>
 
-                <div class="payment-options">
+                <div class="payment-options" role="radiogroup" aria-labelledby="payment-heading">
                     <label class="pay-option">
                         <input type="radio" name="payment_method" value="tunai" checked>
                         <div class="pay-radio"></div>
@@ -828,19 +849,19 @@ $kodeMeja  = $meja['kode_unik'] ?? '';
                 </h3>
 
                 <div class="form-group">
-                    <label>Nama Kamu <span>*</span></label>
-                    <input type="text" id="nama_pemesan" class="form-control" placeholder="Masukkan nama kamu">
+                    <label for="nama_pemesan">Nama Kamu <span aria-hidden="true">*</span></label>
+                    <input type="text" id="nama_pemesan" name="nama_pemesan" class="form-control" placeholder="Masukkan nama kamu" autocomplete="name" enterkeyhint="next" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Catatan</label>
-                    <textarea id="catatan" rows="3" class="form-control" placeholder="Misal: tidak pakai pedas, es dipisah"></textarea>
+                    <label for="catatan">Catatan <span class="label-optional">(opsional)</span></label>
+                    <textarea id="catatan" name="catatan" rows="3" class="form-control" placeholder="Misal: tidak pakai pedas, es dipisah"></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label>Kode Promo</label>
+                    <label for="kode_promo">Kode Promo <span class="label-optional">(opsional)</span></label>
                     <div class="promo-wrap">
-                        <input type="text" id="kode_promo" class="form-control" placeholder="Masukkan kode">
+                        <input type="text" id="kode_promo" name="kode_promo" class="form-control" placeholder="Masukkan kode" autocomplete="off" autocapitalize="characters">
                         <button type="button" onclick="cekPromo()" class="btn-promo">Pakai</button>
                     </div>
                     <p id="promo-info" class="promo-msg"></p>

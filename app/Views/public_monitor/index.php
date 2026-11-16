@@ -21,7 +21,7 @@ $storeName = app_setting('store_name', 'NasPad Zendry');
             --panel-soft: #FFF8F5;
             --white: #ffffff;
             --text: #1C1C1C;
-            --muted: #6B7280;
+            --muted: #57534E;
             --primary: #FF5722;
             --primary-dark: #E64A19;
             --primary-light: #FF8A65;
@@ -58,6 +58,20 @@ $storeName = app_setting('store_name', 'NasPad Zendry');
             font: inherit;
         }
 
+        :where(button, a):focus-visible {
+            outline: 3px solid rgba(234, 88, 12, .45);
+            outline-offset: 3px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: .01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
         /* =====================================================
            PAGE
         ===================================================== */
@@ -66,11 +80,15 @@ $storeName = app_setting('store_name', 'NasPad Zendry');
             width: 100%;
             min-height: 100vh;
             padding: 16px;
+            display: flex;
         }
 
         .monitor-shell {
             width: min(1500px, 100%);
             margin: 0 auto;
+            display: flex;
+            flex: 1;
+            flex-direction: column;
         }
 
         /* =====================================================
@@ -166,14 +184,14 @@ $storeName = app_setting('store_name', 'NasPad Zendry');
 
         .top-monitor {
             display: grid;
-            grid-template-columns: 250px minmax(0, 1fr);
+            grid-template-columns: minmax(0, 1fr) 320px;
             gap: 12px;
-            height: 260px;
+            height: 300px;
         }
 
         .left-monitor-column {
             display: grid;
-            grid-template-rows: 58px 1fr;
+            grid-template-rows: 64px 1fr;
             gap: 10px;
         }
 
@@ -265,10 +283,10 @@ $storeName = app_setting('store_name', 'NasPad Zendry');
         .main-call-number {
             position: relative;
             z-index: 1;
-            font-size: clamp(48px, 7vw, 86px);
-            line-height: .9;
+            font-size: clamp(64px, 10vw, 148px);
+            line-height: .86;
             font-weight: 900;
-            letter-spacing: -.07em;
+            letter-spacing: -.08em;
         }
 
         .main-call-status {
@@ -328,27 +346,31 @@ $storeName = app_setting('store_name', 'NasPad Zendry');
         .banner-content {
             position: relative;
             z-index: 2;
+            width: 100%;
             max-width: 850px;
-            padding: 30px;
+            padding: 24px;
             text-align: center;
         }
 
         .banner-store {
             color: #FFFFFF;
-            font-size: clamp(36px, 6vw, 86px);
-            line-height: .95;
+            font-size: clamp(22px, 2.4vw, 44px);
+            line-height: 1;
             font-weight: 900;
-            letter-spacing: -.07em;
+            letter-spacing: -.05em;
+            word-spacing: .12em;
             text-transform: uppercase;
-            text-shadow: 0 4px 0 rgba(0, 0, 0, .15);
+            text-wrap: balance;
+            overflow-wrap: anywhere;
+            text-shadow: 0 3px 0 rgba(0, 0, 0, .12);
         }
 
         .banner-text {
-            margin-top: 15px;
-            color: rgba(255, 255, 255, .9);
-            font-size: clamp(12px, 1.6vw, 20px);
+            margin-top: 12px;
+            color: rgba(255, 255, 255, .92);
+            font-size: clamp(10px, 1.1vw, 15px);
             font-weight: 800;
-            letter-spacing: .04em;
+            letter-spacing: .06em;
             text-transform: uppercase;
         }
 
@@ -358,6 +380,9 @@ $storeName = app_setting('store_name', 'NasPad Zendry');
 
         .ready-section {
             margin-top: 12px;
+            display: flex;
+            flex: 1;
+            flex-direction: column;
         }
 
         .ready-header {
@@ -403,8 +428,14 @@ $storeName = app_setting('store_name', 'NasPad Zendry');
 
         .ready-grid {
             display: grid;
+            flex: 1;
+            align-content: start;
             grid-template-columns: repeat(6, minmax(0, 1fr));
             gap: 7px;
+        }
+
+        .ready-grid:has(> .ready-empty) {
+            grid-template-rows: minmax(190px, 1fr);
         }
 
         .ready-card {
@@ -450,6 +481,7 @@ $storeName = app_setting('store_name', 'NasPad Zendry');
         .ready-empty {
             grid-column: 1 / -1;
             min-height: 190px;
+            height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -468,7 +500,7 @@ $storeName = app_setting('store_name', 'NasPad Zendry');
         }
 
         .ready-empty strong {
-            color: #94a3b8;
+            color: #57534E;
             font-size: 13px;
         }
 
@@ -641,8 +673,8 @@ $storeName = app_setting('store_name', 'NasPad Zendry');
             }
 
             .top-monitor {
-                grid-template-columns: 300px minmax(0, 1fr);
-                height: 320px;
+                grid-template-columns: minmax(0, 1fr) 380px;
+                height: 340px;
             }
 
             .ready-card {
@@ -652,8 +684,8 @@ $storeName = app_setting('store_name', 'NasPad Zendry');
 
         @media (max-width: 1000px) {
             .top-monitor {
-                grid-template-columns: 210px minmax(0, 1fr);
-                height: 230px;
+                grid-template-columns: minmax(0, 1fr) 230px;
+                height: 260px;
             }
 
             .ready-grid {
@@ -759,8 +791,8 @@ $storeName = app_setting('store_name', 'NasPad Zendry');
                     <span id="clock">--:--:--</span>
                 </div>
 
-                <button type="button" class="fullscreen-button" onclick="toggleFullscreen()" title="Layar Penuh">
-                    <i class="fa-solid fa-expand"></i>
+                <button type="button" class="fullscreen-button" onclick="toggleFullscreen()" title="Layar Penuh" aria-label="Layar penuh">
+                    <i class="fa-solid fa-expand" aria-hidden="true"></i>
                 </button>
             </div>
         </header>

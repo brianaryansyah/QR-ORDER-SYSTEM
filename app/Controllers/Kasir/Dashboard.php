@@ -25,14 +25,19 @@ class Dashboard extends BaseController
         $pending = $this->pesananModel->getPending();
         $last_id = 0;
 
-        foreach ($pending as &$p) {
-            $p['items'] = $this->itemModel->getByPesanan($p['id']);
+        if (! empty($pending)) {
+            $pendingIds = array_map('intval', array_column($pending, 'id'));
+            $itemsMap   = $this->itemModel->getByPesananIds($pendingIds);
 
-            if ($p['id'] > $last_id) {
-                $last_id = $p['id'];
+            foreach ($pending as &$p) {
+                $p['items'] = $itemsMap[$p['id']] ?? [];
+
+                if ($p['id'] > $last_id) {
+                    $last_id = $p['id'];
+                }
             }
+            unset($p);
         }
-        unset($p);
 
         $hari_ini = date('Y-m-d');
 
@@ -44,16 +49,22 @@ class Dashboard extends BaseController
         $pendapatan = $pendapatan_row['total_harga'] ?? 0;
 
         $riwayatHariIni = $this->pesananModel
-            ->where('DATE(created_at)', $hari_ini)
-            ->orderBy('created_at', 'DESC')
+            ->select('pesanans.*, mejas.nomor_meja')
+            ->join('mejas', 'mejas.id = pesanans.meja_id', 'left')
+            ->where('DATE(pesanans.created_at)', $hari_ini)
+            ->orderBy('pesanans.created_at', 'DESC')
             ->findAll();
 
-        foreach ($riwayatHariIni as &$r) {
-            $meja = $this->mejaModel->find($r['meja_id']);
-            $r['nomor_meja'] = $meja['nomor_meja'] ?? '-';
-            $r['items'] = $this->itemModel->getByPesanan($r['id']);
+        if (! empty($riwayatHariIni)) {
+            $riwayatIds      = array_map('intval', array_column($riwayatHariIni, 'id'));
+            $riwayatItemsMap = $this->itemModel->getByPesananIds($riwayatIds);
+
+            foreach ($riwayatHariIni as &$r) {
+                $r['nomor_meja'] = $r['nomor_meja'] ?? '-';
+                $r['items']      = $riwayatItemsMap[$r['id']] ?? [];
+            }
+            unset($r);
         }
-        unset($r);
 
         $data = [
             'title'              => 'Antrean Pesanan — NasPad Zendry',
@@ -95,44 +106,52 @@ class Dashboard extends BaseController
     public function cek_baru($last_id)
     {
         try {
-            $semuaPending = $this->pesananModel->getPending();
+            $lastIdInt = (int) $last_id;
 
-            $pesananBaru = [];
-            $new_last_id = (int) $last_id;
+            $pesananBaruRows = $this->pesananModel
+                ->select('pesanans.*, mejas.nomor_meja')
+                ->join('mejas', 'mejas.id = pesanans.meja_id', 'left')
+                ->where('pesanans.id >', $lastIdInt)
+                ->where('pesanans.status_pesanan', 'menunggu')
+                ->orderBy('pesanans.id', 'ASC')
+                ->findAll();
 
-            foreach ($semuaPending as $p) {
-                if ($p['id'] > $last_id) {
-                    $p['items'] = $this->itemModel->getByPesanan($p['id']);
-
-                    $p['waktu'] = date('H:i', strtotime($p['created_at']));
-                    $p['total_format'] = number_format($p['total_harga'], 0, ',', '.');
-                    $p['status_pembayaran'] = $p['status'];
-                    $p['metode_label'] = $this->formatMetodePembayaran($p['metode_pembayaran'] ?? '-');
-
-                    $pesananBaru[] = $p;
-
-                    if ($p['id'] > $new_last_id) {
-                        $new_last_id = $p['id'];
-                    }
-                }
-            }
-
-            if (!empty($pesananBaru)) {
+            if (empty($pesananBaruRows)) {
                 return $this->response->setJSON([
-                    'ada'     => true,
-                    'data'    => $pesananBaru,
-                    'last_id' => $new_last_id
+                    'ada' => false,
                 ]);
             }
 
+            $orderIds = array_map('intval', array_column($pesananBaruRows, 'id'));
+            $itemsMap = $this->itemModel->getByPesananIds($orderIds);
+
+            $pesananBaru = [];
+            $new_last_id = $lastIdInt;
+
+            foreach ($pesananBaruRows as $p) {
+                $p['items']             = $itemsMap[$p['id']] ?? [];
+                $p['waktu']             = date('H:i', strtotime($p['created_at']));
+                $p['total_format']       = number_format($p['total_harga'], 0, ',', '.');
+                $p['status_pembayaran'] = $p['status'];
+                $p['metode_label']       = $this->formatMetodePembayaran($p['metode_pembayaran'] ?? '-');
+
+                $pesananBaru[] = $p;
+
+                if ($p['id'] > $new_last_id) {
+                    $new_last_id = (int) $p['id'];
+                }
+            }
+
             return $this->response->setJSON([
-                'ada' => false
+                'ada'     => true,
+                'data'    => $pesananBaru,
+                'last_id' => $new_last_id,
             ]);
 
         } catch (\Exception $e) {
             return $this->response->setJSON([
                 'ada'   => false,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
         }
     }
@@ -149,26 +168,36 @@ class Dashboard extends BaseController
             $hari_ini = date('Y-m-d');
 
             $pesananLunas = $this->pesananModel
-                ->where('DATE(updated_at)', $hari_ini)
-                ->where('updated_at >', $lastTime)
-                ->where('status', 'selesai')
-                ->where('metode_pembayaran !=', 'tunai')
-                ->orderBy('updated_at', 'ASC')
+                ->select('pesanans.*, mejas.nomor_meja')
+                ->join('mejas', 'mejas.id = pesanans.meja_id', 'left')
+                ->where('DATE(pesanans.updated_at)', $hari_ini)
+                ->where('pesanans.updated_at >', $lastTime)
+                ->where('pesanans.status', 'selesai')
+                ->where('pesanans.metode_pembayaran !=', 'tunai')
+                ->orderBy('pesanans.updated_at', 'ASC')
                 ->findAll();
+
+            if (empty($pesananLunas)) {
+                return $this->response->setJSON([
+                    'ada'       => false,
+                    'last_time' => $lastTime,
+                ]);
+            }
+
+            $orderIds = array_map('intval', array_column($pesananLunas, 'id'));
+            $itemsMap = $this->itemModel->getByPesananIds($orderIds);
 
             $data = [];
             $newLastTime = $lastTime;
 
             foreach ($pesananLunas as $p) {
-                $meja = $this->mejaModel->find($p['meja_id']);
-
-                $p['nomor_meja'] = $meja['nomor_meja'] ?? '-';
-                $p['items'] = $this->itemModel->getByPesanan($p['id']);
-                $p['waktu'] = date('H:i', strtotime($p['updated_at']));
-                $p['created_waktu'] = date('H:i', strtotime($p['created_at']));
-                $p['total_format'] = number_format($p['total_harga'], 0, ',', '.');
+                $p['nomor_meja']        = $p['nomor_meja'] ?? '-';
+                $p['items']             = $itemsMap[$p['id']] ?? [];
+                $p['waktu']             = date('H:i', strtotime($p['updated_at']));
+                $p['created_waktu']     = date('H:i', strtotime($p['created_at']));
+                $p['total_format']       = number_format($p['total_harga'], 0, ',', '.');
                 $p['status_pembayaran'] = $p['status'];
-                $p['metode_label'] = $this->formatMetodePembayaran($p['metode_pembayaran'] ?? '-');
+                $p['metode_label']       = $this->formatMetodePembayaran($p['metode_pembayaran'] ?? '-');
 
                 $data[] = $p;
 
@@ -177,23 +206,16 @@ class Dashboard extends BaseController
                 }
             }
 
-            if (!empty($data)) {
-                return $this->response->setJSON([
-                    'ada'       => true,
-                    'data'      => $data,
-                    'last_time' => $newLastTime,
-                ]);
-            }
-
             return $this->response->setJSON([
-                'ada'       => false,
-                'last_time' => $lastTime,
+                'ada'       => true,
+                'data'      => $data,
+                'last_time' => $newLastTime,
             ]);
 
         } catch (\Exception $e) {
             return $this->response->setJSON([
                 'ada'   => false,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
         }
     }

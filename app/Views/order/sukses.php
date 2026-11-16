@@ -499,6 +499,139 @@ if (! empty($storeWhatsapp)) {
             opacity: .94;
         }
 
+        /* Live Progress Stepper */
+        .stepper-card {
+            margin: 18px 0;
+            padding: 18px 14px;
+            background: #FFF7ED;
+            border: 1px solid #FED7AA;
+            border-radius: 20px;
+        }
+
+        .stepper-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .stepper-title {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: #9A3412;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stepper-live {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 10px;
+            color: #16a34a;
+            font-weight: 800;
+            background: #dcfce7;
+            padding: 3px 8px;
+            border-radius: 999px;
+            border: 1px solid #bbf7d0;
+        }
+
+        .stepper-live-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #16a34a;
+            animation: pulse-dot 1.5s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 6px rgba(22, 163, 74, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+        }
+
+        .stepper-track {
+            display: flex;
+            align-items: flex-start;
+            position: relative;
+        }
+
+        .stepper-track::before {
+            content: '';
+            position: absolute;
+            top: 16px;
+            left: 12%;
+            right: 12%;
+            height: 3px;
+            background: #FED7AA;
+            z-index: 1;
+        }
+
+        .step-node {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #FFFFFF;
+            border: 2.5px solid #E5E7EB;
+            color: #9CA3AF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all .35s ease;
+        }
+
+        .step-node.completed .step-icon {
+            background: #16a34a;
+            border-color: #16a34a;
+            color: #FFFFFF;
+        }
+
+        .step-node.active .step-icon {
+            background: #EA580C;
+            border-color: #EA580C;
+            color: #FFFFFF;
+            box-shadow: 0 0 0 5px rgba(234, 88, 12, .18);
+            animation: bounce-gentle 2s infinite;
+        }
+
+        @keyframes bounce-gentle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
+        .step-text {
+            font-size: 10px;
+            font-weight: 700;
+            color: #78716C;
+            margin-top: 7px;
+            line-height: 1.25;
+            max-width: 70px;
+        }
+
+        .step-node.active .step-text {
+            color: #EA580C;
+            font-weight: 800;
+        }
+
+        .step-node.completed .step-text {
+            color: #16a34a;
+            font-weight: 700;
+        }
+
         @media (max-width: 380px) {
             .card-body {
                 padding: 18px;
@@ -571,6 +704,40 @@ if (! empty($storeWhatsapp)) {
                     <?php endif; ?>
                 </div>
             <?php endif; ?>
+
+            <!-- Live Status Stepper -->
+            <div class="stepper-card">
+                <div class="stepper-top">
+                    <span class="stepper-title">
+                        <i class="fa-solid fa-route"></i> Status Pesanan Live
+                    </span>
+                    <span class="stepper-live">
+                        <span class="stepper-live-dot"></span> Memantau Otomatis
+                    </span>
+                </div>
+
+                <div class="stepper-track">
+                    <div class="step-node completed" id="step-1">
+                        <div class="step-icon"><i class="fa-solid fa-receipt"></i></div>
+                        <span class="step-text">Diterima</span>
+                    </div>
+
+                    <div class="step-node <?= $isSelesai ? 'completed' : 'active' ?>" id="step-2">
+                        <div class="step-icon"><i class="fa-solid fa-wallet"></i></div>
+                        <span class="step-text"><?= $metode === 'tunai' ? 'Kasir' : 'Pembayaran' ?></span>
+                    </div>
+
+                    <div class="step-node <?= ($pesanan['status_pesanan'] ?? '') === 'siap' ? 'active' : '' ?>" id="step-3">
+                        <div class="step-icon"><i class="fa-solid fa-utensils"></i></div>
+                        <span class="step-text">Disiapkan</span>
+                    </div>
+
+                    <div class="step-node" id="step-4">
+                        <div class="step-icon"><i class="fa-solid fa-bell-concierge"></i></div>
+                        <span class="step-text">Siap Diantar</span>
+                    </div>
+                </div>
+            </div>
 
             <div class="queue-box">
                 <span class="queue-label">Nomor Antrian</span>
@@ -661,6 +828,120 @@ if (! empty($storeWhatsapp)) {
         </div>
     </div>
 </div>
+
+<script>
+(function() {
+    const orderCode = '<?= esc($pesanan['kode_pesanan']) ?>';
+    const checkUrl = '<?= base_url('order/status/' . $pesanan['kode_pesanan']) ?>';
+    let currentStep = <?= $isSelesai ? 2 : 1 ?>;
+    let isFinished = false;
+
+    // Pleasant Web Audio notification chime when food is ready
+    function playChime() {
+        try {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+            const ctx = new AudioContext();
+            const now = ctx.currentTime;
+            
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(587.33, now); // D5
+            osc.frequency.setValueAtTime(880, now + 0.15); // A5
+            
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.7);
+            
+            osc.start(now);
+            osc.stop(now + 0.7);
+        } catch(e) {}
+    }
+
+    async function pollStatus() {
+        if (isFinished) return;
+        try {
+            const res = await fetch(checkUrl);
+            if (!res.ok) return;
+            const data = await res.json();
+            if (!data.success) return;
+
+            const step = data.step;
+            const statusTitle = document.querySelector('.status-title');
+            const statusDesc = document.querySelector('.status-desc');
+            const instructionBox = document.querySelector('.instruction-box');
+
+            // Update Stepper Nodes
+            const nodes = document.querySelectorAll('.step-node');
+            nodes.forEach((node, idx) => {
+                const nodeStep = idx + 1;
+                node.classList.remove('active', 'completed');
+                if (nodeStep < step) {
+                    node.classList.add('completed');
+                } else if (nodeStep === step) {
+                    node.classList.add('active');
+                }
+            });
+
+            // Update text & alert dynamically
+            if (step >= 2 && currentStep < 2) {
+                if (statusTitle) statusTitle.textContent = 'Pesanan Diproses!';
+                if (statusDesc) statusDesc.textContent = 'Pembayaran berhasil dikonfirmasi. Pesanan kamu sedang disiapkan dapur.';
+                if (instructionBox) {
+                    instructionBox.className = 'instruction-box instruction-success';
+                    instructionBox.innerHTML = `
+                        <div class="instruction-header">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <h4>Pembayaran Berhasil</h4>
+                        </div>
+                        <p>Terima kasih. Pesanan Anda telah diterima dan sedang disiapkan.</p>
+                    `;
+                }
+            }
+
+            if (step === 3 && currentStep < 3) {
+                playChime();
+                if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+                if (statusTitle) {
+                    statusTitle.textContent = 'Pesanan Siap Diantarkan!';
+                    statusTitle.style.color = '#15803d';
+                }
+                if (statusDesc) {
+                    statusDesc.textContent = 'Makananmu sudah selesai dimasak dan sedang diantarkan ke Meja <?= esc($nomorMeja) ?>.';
+                }
+                if (instructionBox) {
+                    instructionBox.className = 'instruction-box instruction-success';
+                    instructionBox.style.background = '#dcfce7';
+                    instructionBox.style.borderColor = '#86efac';
+                    instructionBox.innerHTML = `
+                        <div class="instruction-header" style="color: #15803d;">
+                            <i class="fa-solid fa-bell-concierge"></i>
+                            <h4>Pesanan Siap!</h4>
+                        </div>
+                        <p style="color: #166534; font-weight: 700;">Silakan tunggu di meja, pesanan sedang diantarkan.</p>
+                    `;
+                }
+            }
+
+            if (step === 4) {
+                isFinished = true;
+                if (statusTitle) statusTitle.textContent = 'Pesanan Selesai';
+                if (statusDesc) statusDesc.textContent = 'Selamat menikmati santapan Anda! Terima kasih atas kunjungannya.';
+            }
+
+            currentStep = step;
+        } catch (e) {
+            console.error('Polling status error:', e);
+        }
+    }
+
+    // Auto-poll every 5 seconds
+    setInterval(pollStatus, 5000);
+})();
+</script>
 
 </body>
 </html>

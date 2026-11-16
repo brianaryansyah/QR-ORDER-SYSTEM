@@ -36,6 +36,7 @@ $routes->get('order/checkout/(:segment)',    'Order::checkout/$1');
 $routes->post('order/cek-promo/(:segment)',  'Order::cekPromo/$1');
 $routes->post('order/submit/(:segment)',     'Order::submit/$1');
 $routes->get('order/sukses/(:segment)',      'Order::sukses/$1');
+$routes->get('order/status/(:segment)',      'Order::checkStatus/$1');
 $routes->post('order/midtrans-notification', 'Order::midtransNotification');
 
 

@@ -13,7 +13,7 @@ $paymentIcon = static function (?string $m): string { return match($m){'tunai'=>
     <div class="rounded-[1.6rem] bg-white border border-[#FED7AA] shadow-[0_8px_28px_rgba(62,35,20,.06)] p-5 lg:p-7">
         <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-5">
             <div>
-                <p class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#FFF7ED] border border-[#FED7AA] text-[#EA580C] text-xs font-bold mb-3"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Admin Dashboard</p>
+                <p class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#FFF7ED] border border-[#FED7AA] text-[#EA580C] text-xs font-bold mb-3"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Ringkasan Hari Ini</p>
                 <h1 class="text-2xl lg:text-3xl font-extrabold tracking-tight text-[#000000]">Dashboard <?= esc($storeName) ?></h1>
                 <p class="text-sm font-medium text-black mt-2 max-w-2xl"><?= esc($storeDescription ?: 'Pantau pesanan, pendapatan, menu, dan aktivitas operasional warung dari satu halaman.') ?></p>
             </div>
@@ -95,7 +95,7 @@ $paymentIcon = static function (?string $m): string { return match($m){'tunai'=>
         </div>
         <div class="space-y-5">
             <div class="rounded-2xl border border-[#FED7AA] bg-white shadow-[0_8px_28px_rgba(62,35,20,.06)] overflow-hidden">
-                <div class="p-5 border-b border-[#FED7AA] bg-white"><h2 class="text-lg font-extrabold text-[#000000]">Akses Cepat</h2><p class="text-xs font-medium text-black mt-1">Shortcut untuk mengelola warung.</p></div>
+                <div class="p-5 border-b border-[#FED7AA] bg-white"><h2 class="text-lg font-extrabold text-[#000000]">Akses Cepat</h2><p class="text-xs font-medium text-black mt-1">Pintasan untuk mengelola warung.</p></div>
                 <div class="p-4 space-y-2">
                     <a href="<?= base_url('admin/menu') ?>" class="group flex items-center gap-3 p-3 rounded-xl hover:bg-[#FFF7ED] border border-stone-200 text-sm text-black transition"><div class="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center flex-shrink-0 text-amber-800"><i class="fa-solid fa-utensils"></i></div><div class="min-w-0"><p class="font-bold text-[#000000]">Tambah Lauk Baru</p><p class="text-xs font-medium text-black mt-0.5">Rendang, Gulai, Ayam Pop</p></div><i class="fa-solid fa-chevron-right text-xs text-black ml-auto group-hover:text-[#EA580C]"></i></a>
                     <a href="<?= base_url('admin/meja') ?>" class="group flex items-center gap-3 p-3 rounded-xl hover:bg-[#FFF7ED] border border-stone-200 text-sm text-black transition"><div class="w-10 h-10 rounded-xl bg-sky-50 border border-sky-200 flex items-center justify-center flex-shrink-0 text-sky-800"><i class="fa-solid fa-qrcode"></i></div><div class="min-w-0"><p class="font-bold text-[#000000]">Kelola QR Meja</p><p class="text-xs font-medium text-black mt-0.5">Generate dan cetak QR</p></div><i class="fa-solid fa-chevron-right text-xs text-black ml-auto group-hover:text-[#EA580C]"></i></a>
@@ -106,7 +106,7 @@ $paymentIcon = static function (?string $m): string { return match($m){'tunai'=>
             </div>
             <div class="rounded-2xl border border-[#FED7AA] bg-[#FFF7ED] p-5 shadow-[0_4px_14px_rgba(62,35,20,.05)]">
                 <div class="w-12 h-12 rounded-xl bg-white border border-[#FED7AA] flex items-center justify-center text-[#EA580C] mb-4"><i class="fa-solid fa-credit-card"></i></div>
-                <h3 class="text-base font-extrabold text-[#000000]">Payment Gateway Aktif</h3>
+                <h3 class="text-base font-extrabold text-[#000000]">Pembayaran Online Aktif</h3>
                 <p class="text-xs font-medium text-black mt-2 leading-relaxed">Warung mendukung Tunai, QRIS, E-Wallet, dan Transfer Bank via Midtrans.</p>
                 <div class="mt-4 flex flex-wrap gap-2"><span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-900 border border-emerald-200">Tunai</span><span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-sky-50 text-sky-900 border border-sky-200">QRIS</span><span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-purple-50 text-purple-900 border border-purple-200">VA Bank</span></div>
             </div>

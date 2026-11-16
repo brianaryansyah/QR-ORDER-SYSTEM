@@ -63,6 +63,9 @@ Vagrantfile
 /writable/debugbar/*
 !/writable/debugbar/index.html
 
+# Local SQLite database may contain customer data
+/writable/database.db
+
 php_errors.log
 
 #-------------------------

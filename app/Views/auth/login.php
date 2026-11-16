@@ -37,6 +37,7 @@ $faviconSrc = ! empty($faviconPath) ? base_url($faviconPath) : '';
         .card-header-text h2{font-size:25px;line-height:1.2;font-weight:900;letter-spacing:-.04em;color:#000000}
         .card-header-text p{font-size:13px;color:#44403C;font-weight:500;margin-top:8px;line-height:1.55}
         .alert{display:flex;align-items:flex-start;gap:10px;background:#FEF2F2;border:1px solid #FECACA;color:#991B1B;border-radius:16px;padding:13px 14px;font-size:13px;font-weight:700;line-height:1.5;margin-bottom:20px}
+        .card form{margin-top:20px}
         .form-group{margin-bottom:18px}
         .form-group label{display:block;font-size:11px;font-weight:800;color:#1C1917;text-transform:uppercase;letter-spacing:.1em;margin-bottom:9px}
         .input-wrap{position:relative}
@@ -44,8 +45,8 @@ $faviconSrc = ! empty($faviconPath) ? base_url($faviconPath) : '';
         .input-wrap input{width:100%;background:#FFFFFF;border:1.5px solid #E7E5E4;color:#000000;border-radius:16px;padding:14px 45px 14px 43px;font-size:14px;font-weight:600;outline:none;transition:.2s}
         .input-wrap input::placeholder{color:#A8A29E}
         .input-wrap input:focus{border-color:#EA580C;box-shadow:0 0 0 4px rgba(138,37,18,.1)}
-        .toggle-pw{position:absolute;right:15px;top:50%;transform:translateY(-50%);font-size:14px;color:#78716C;cursor:pointer}
-        .toggle-pw:hover{color:#000000}
+        .toggle-pw{position:absolute;right:9px;top:50%;transform:translateY(-50%);width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:10px;background:transparent;font-size:14px;color:#78716C;cursor:pointer}
+        .toggle-pw:hover{color:#000000;background:#FFF7ED}
         .btn-submit{width:100%;border:0;border-radius:16px;background:#EA580C;color:#fff;padding:15px 16px;font-size:14px;font-weight:800;display:flex;justify-content:center;align-items:center;gap:10px;cursor:pointer;box-shadow:0 10px 28px rgba(138,37,18,.22);transition:transform .15s}
         .btn-submit:hover{background:#C2410C}
         .btn-submit:active{transform:scale(.98)}
@@ -54,7 +55,9 @@ $faviconSrc = ! empty($faviconPath) ? base_url($faviconPath) : '';
         .security-note p{font-size:12px;line-height:1.55;color:#44403C;font-weight:500}
         .login-footer{text-align:center;margin-top:22px;font-size:12px;color:#57534E;font-weight:500;line-height:1.6}
         .login-footer strong{color:#000000}
+        :where(button,a,input):focus-visible{outline:3px solid rgba(234,88,12,.35);outline-offset:2px}
         @media(max-width:420px){.card{padding:24px 20px;border-radius:24px}}
+        @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}}
     </style>
 </head>
 <body>
@@ -66,13 +69,13 @@ $faviconSrc = ! empty($faviconPath) ? base_url($faviconPath) : '';
         </div>
     </div>
     <div class="card">
-        <div class="badge"><span class="badge-dot"></span> Role Access</div>
+        <div class="badge"><span class="badge-dot"></span> Area Staf</div>
         <div class="card-header-text">
             <h2>Masuk ke Akun</h2>
             <p>Silakan login menggunakan username dan password yang sudah terdaftar.</p>
         </div>
         <?php if (session()->getFlashdata('msg')): ?>
-            <div class="alert"><i class="fa-solid fa-circle-exclamation"></i><span><?= esc(session()->getFlashdata('msg')) ?></span></div>
+            <div class="alert" role="alert"><i class="fa-solid fa-circle-exclamation"></i><span><?= esc(session()->getFlashdata('msg')) ?></span></div>
         <?php endif; ?>
         <form action="<?= base_url('auth/login') ?>" method="POST">
             <?= csrf_field() ?>
@@ -88,18 +91,29 @@ $faviconSrc = ! empty($faviconPath) ? base_url($faviconPath) : '';
                 <div class="input-wrap">
                     <i class="fa-solid fa-lock input-icon"></i>
                     <input type="password" id="password" name="password" placeholder="Masukkan password" required autocomplete="current-password">
-                    <i class="fa-solid fa-eye toggle-pw" id="togglePw"></i>
+                    <button type="button" class="toggle-pw" id="togglePw" aria-label="Tampilkan password" aria-pressed="false">
+                        <i class="fa-solid fa-eye" aria-hidden="true"></i>
+                    </button>
                 </div>
             </div>
-            <button type="submit" class="btn-submit"><i class="fa-solid fa-arrow-right-to-bracket"></i> Masuk Dashboard</button>
+            <button type="submit" class="btn-submit"><i class="fa-solid fa-arrow-right-to-bracket"></i> Masuk ke Dashboard</button>
         </form>
         <div class="security-note"><i class="fa-solid fa-shield-halved"></i><p>Halaman ini hanya untuk admin dan kasir yang memiliki akses resmi.</p></div>
     </div>
-    <p class="login-footer">&copy; <?= date('Y') ?> <strong><?= esc($storeName) ?></strong>. All rights reserved.<br><?= esc($footerText) ?></p>
+    <p class="login-footer">&copy; <?= date('Y') ?> <strong><?= esc($storeName) ?></strong>. Hak cipta dilindungi.<br><?= esc($footerText) ?></p>
 </div>
 <script>
     const togglePw=document.getElementById('togglePw'), pwInput=document.getElementById('password');
-    if(togglePw&&pwInput){ togglePw.addEventListener('click',()=>{ const h=pwInput.type==='password'; pwInput.type=h?'text':'password'; togglePw.classList.toggle('fa-eye',!h); togglePw.classList.toggle('fa-eye-slash',h); }); }
+    if(togglePw&&pwInput){
+        togglePw.addEventListener('click',()=>{
+            const show=pwInput.type==='password';
+            pwInput.type=show?'text':'password';
+            togglePw.setAttribute('aria-pressed',show?'true':'false');
+            togglePw.setAttribute('aria-label',show?'Sembunyikan password':'Tampilkan password');
+            const icon=togglePw.querySelector('i');
+            if(icon){ icon.classList.toggle('fa-eye',!show); icon.classList.toggle('fa-eye-slash',show); }
+        });
+    }
 </script>
 </body>
 </html>

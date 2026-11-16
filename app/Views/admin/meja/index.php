@@ -97,7 +97,7 @@
                     </div>
 
                     <button type="submit"
-                            class="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-[#EA580C] px-5 py-3 text-sm font-bold text-[#000000] shadow-sm hover:opacity-95 transition">
+                            class="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-[#EA580C] px-5 py-3 text-sm font-bold text-white shadow-sm hover:bg-[#C2410C] transition">
                         <i class="fa-solid fa-plus"></i>
                         Tambah Meja
                     </button>
@@ -237,7 +237,7 @@
                 <button type="button" id="btn-copy-link" onclick="copyLink(this)" class="mt-2 text-xs font-bold text-[#EA580C] hover:underline">Salin Link</button>
             </div>
             <div class="flex gap-3 mt-5">
-                <button onclick="printQR()" class="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] px-4 py-3 text-sm font-bold text-[#000000] shadow-sm transition"><i class="fa-solid fa-print"></i> Cetak QR</button>
+                <button onclick="printQR()" class="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] px-4 py-3 text-sm font-bold text-white shadow-sm transition"><i class="fa-solid fa-print"></i> Cetak QR</button>
                 <button onclick="closeQR()" class="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-white border border-stone-300 px-4 py-3 text-sm font-bold text-black hover:bg-stone-50">Tutup</button>
             </div>
             <p class="text-[11px] text-black mt-3">Cetak & tempel di meja — pelanggan scan tanpa login</p>

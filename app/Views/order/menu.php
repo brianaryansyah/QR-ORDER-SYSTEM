@@ -69,7 +69,9 @@ $promoSyaratLabel = static function (array $promo) use ($formatRupiah): string {
     <link rel="icon" type="image/png" href="<?= esc($faviconSrc) ?>">
     <?php endif; ?>
 
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link
+href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -130,7 +132,7 @@ $promoSyaratLabel = static function (array $promo) use ($formatRupiah): string {
             position: relative;
             z-index: 1;
             box-shadow: 0 0 50px rgba(0, 0, 0, 0.1);
-            padding-bottom: 120px;
+            padding-bottom: calc(120px + env(safe-area-inset-bottom));
         }
 
         .header {
@@ -283,22 +285,22 @@ $promoSyaratLabel = static function (array $promo) use ($formatRupiah): string {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 5px 9px;
+            padding: 5px 11px;
             border-radius: 999px;
-            background: rgba(34,197,94,.10);
-            border: 1px solid rgba(34,197,94,.20);
-            color: #86efac;
-            font-size: 10px;
-            font-weight: 900;
+            background: #dcfce7;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            font-size: 11px;
+            font-weight: 800;
             margin-bottom: 9px;
         }
 
         .badge-dot {
-            width: 6px;
-            height: 6px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
-            background: #22c55e;
-            box-shadow: 0 0 0 4px rgba(34,197,94,.10);
+            background: #16a34a;
+            box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.2);
         }
 
         .hero-title {
@@ -505,6 +507,185 @@ $promoSyaratLabel = static function (array $promo) use ($formatRupiah): string {
             color: var(--text);
         }
 
+        /* Search Bar */
+        .search-section {
+            padding: 4px 10px 14px;
+        }
+
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: #FFFFFF;
+            border: 1.5px solid var(--border);
+            border-radius: 18px;
+            padding: 0 14px;
+            box-shadow: 0 4px 14px rgba(234, 88, 12, 0.05);
+            transition: border-color .2s ease, box-shadow .2s ease;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(255, 87, 34, 0.12);
+        }
+
+        .search-icon {
+            color: #78716C;
+            font-size: 14px;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+
+        .search-box input {
+            width: 100%;
+            height: 44px;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .search-box input::placeholder {
+            color: #A8A29E;
+            font-weight: 500;
+        }
+
+        .search-clear {
+            display: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: none;
+            background: #F5F5F4;
+            color: #78716C;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 11px;
+            flex-shrink: 0;
+            transition: .2s;
+        }
+
+        .search-clear:hover {
+            background: #E7E5E4;
+            color: #1C1917;
+        }
+
+        /* High-Conversion Floating Cart Bar */
+        .floating-cart-bar {
+            position: fixed;
+            bottom: calc(20px + env(safe-area-inset-bottom));
+            left: 50%;
+            transform: translateX(-50%) translateY(160%);
+            width: calc(100% - 28px);
+            max-width: 440px;
+            background: linear-gradient(135deg, #EA580C, #C2410C);
+            border-radius: 24px;
+            padding: 10px 14px 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 16px 36px rgba(234, 88, 12, 0.42);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            z-index: 55;
+            cursor: pointer;
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .floating-cart-bar.active {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .floating-cart-bar:active {
+            transform: translateX(-50%) scale(0.98);
+        }
+
+        .floating-cart-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #FFFFFF;
+        }
+
+        .floating-cart-icon-box {
+            position: relative;
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.20);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            flex-shrink: 0;
+        }
+
+        .floating-cart-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #FFFFFF;
+            color: #EA580C;
+            font-size: 11px;
+            font-weight: 900;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .floating-cart-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .floating-cart-count {
+            font-size: 11px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.88);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .floating-cart-total {
+            font-size: 16px;
+            font-weight: 900;
+            color: #FFFFFF;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+        }
+
+        .floating-cart-btn {
+            background: #FFFFFF;
+            color: #EA580C;
+            border: none;
+            padding: 11px 18px;
+            border-radius: 18px;
+            font-size: 13px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+            cursor: pointer;
+            transition: background 0.15s, transform 0.15s;
+            flex-shrink: 0;
+        }
+
+        .floating-cart-btn:hover {
+            background: #FFF7ED;
+        }
+
         .section-head {
             display: flex;
             align-items: end;
@@ -527,13 +708,10 @@ $promoSyaratLabel = static function (array $promo) use ($formatRupiah): string {
 
         .cat-list {
             display: flex;
+            flex-wrap: wrap;
             gap: 9px;
-            overflow-x: auto;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-            padding: 0 14px 15px;
-            scroll-snap-type: x mandatory;
-            scroll-behavior: smooth;
+            overflow: visible;
+            padding: 0 16px 16px;
         }
 
         .cat-list::-webkit-scrollbar {
@@ -544,14 +722,20 @@ $promoSyaratLabel = static function (array $promo) use ($formatRupiah): string {
             border: 1px solid var(--border);
             background: #FFFFFF;
             color: var(--muted);
-            padding: 9px 16px;
+            padding: 10px 18px;
             border-radius: 999px;
-            font-size: 11.5px;
+            font-size: 12px;
             font-weight: 900;
             white-space: nowrap;
             cursor: pointer;
             transition: .2s ease;
             scroll-snap-align: start;
+            flex-shrink: 0;
+        }
+
+        .category-pill:focus-visible {
+            outline: 3px solid rgba(234, 88, 12, .35);
+            outline-offset: 2px;
         }
 
         .category-pill.active {
@@ -599,7 +783,7 @@ $promoSyaratLabel = static function (array $promo) use ($formatRupiah): string {
         .img-wrap {
             position: relative;
             width: 100%;
-            aspect-ratio: 1.08 / .82;
+            aspect-ratio: 1 / .92;
             background: rgba(255,255,255,.04);
             overflow: hidden;
         }
@@ -621,11 +805,29 @@ $promoSyaratLabel = static function (array $promo) use ($formatRupiah): string {
         .no-img {
             width: 100%;
             height: 100%;
-            color: #475569;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
+            gap: 2px;
+            background:
+                radial-gradient(circle at 30% 20%, rgba(255,255,255,.9), transparent 42%),
+                linear-gradient(145deg, #FFF4EA, #FFE6D2);
+        }
+
+        .no-img-letter {
+            font-family: 'Instrument Serif', serif;
+            font-size: clamp(30px, 8vw, 44px);
+            line-height: 1;
+            color: #C2410C;
+        }
+
+        .no-img-label {
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: #A16207;
         }
 
         .stock-badge {
@@ -642,13 +844,17 @@ $promoSyaratLabel = static function (array $promo) use ($formatRupiah): string {
         }
 
         .stock-ready {
-            background: rgba(34,197,94,.16);
-            color: #86efac;
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+            box-shadow: 0 2px 6px rgba(22, 101, 52, 0.12);
         }
 
         .stock-empty {
-            background: rgba(244,63,94,.16);
-            color: #fda4af;
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+            box-shadow: 0 2px 6px rgba(153, 27, 27, 0.12);
         }
 
         .menu-content {
@@ -660,9 +866,9 @@ $promoSyaratLabel = static function (array $promo) use ($formatRupiah): string {
         }
 
         .item-title {
-            font-size: 12.5px;
+            font-size: 13px;
             line-height: 1.35;
-            font-weight: 900;
+            font-weight: 800;
             color: var(--text);
             min-height: 34px;
             display: -webkit-box;
@@ -672,10 +878,10 @@ $promoSyaratLabel = static function (array $promo) use ($formatRupiah): string {
         }
 
         .item-desc {
-            font-size: 10.5px;
+            font-size: 11px;
             line-height: 1.45;
-            color: var(--muted-2);
-            min-height: 30px;
+            color: #57534E;
+            min-height: 32px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -1001,11 +1207,17 @@ $promoSyaratLabel = static function (array $promo) use ($formatRupiah): string {
             }
 
             .item-desc {
-                display: none;
+                display: -webkit-box;
+                -webkit-line-clamp: 1;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                font-size: 10px;
+                min-height: auto;
             }
 
             .item-price {
-                font-size: 11px;
+                font-size: 12px;
+                font-weight: 800;
             }
 
             .icon-btn {
@@ -1013,9 +1225,23 @@ $promoSyaratLabel = static function (array $promo) use ($formatRupiah): string {
                 height: 29px;
             }
         }
+        .app::after {
+            content: '';
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            height: 120px;
+            background: linear-gradient(to top, #FFF8F5 35%, rgba(255, 248, 245, 0));
+            pointer-events: none;
+            z-index: 45;
+        }
+
         .bottom-nav {
             position: fixed;
-            bottom: 24px;
+            bottom: calc(24px + env(safe-area-inset-bottom));
             left: 50%;
             transform: translateX(-50%);
             width: calc(100% - 40px);
@@ -1230,6 +1456,17 @@ $promoSyaratLabel = static function (array $promo) use ($formatRupiah): string {
         </div>
     </section>
 
+    <!-- Instant Search Bar -->
+    <div class="search-section">
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" id="menu-search" placeholder="Cari rendang, ayam pop, lauk favorit..." autocomplete="off">
+            <button type="button" id="search-clear" class="search-clear" aria-label="Hapus pencarian">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+    </div>
+
     <div class="section-head">
         <div>
             <h2>Kategori</h2>
@@ -1266,19 +1503,25 @@ $promoSyaratLabel = static function (array $promo) use ($formatRupiah): string {
                     $hasMenu = true;
                     $itemId = (int) ($item['id'] ?? 0);
                     $stok   = (int) ($item['stok'] ?? 0);
+                    $gambar = (string) ($item['gambar'] ?? '');
+                    $hasGambar = $gambar !== '' && is_file(FCPATH . 'uploads/menu/' . $gambar);
+                    $initial = strtoupper(mb_substr((string) ($item['nama_menu'] ?? 'M'), 0, 1));
                 ?>
 
                 <div class="menu-card menu-item" data-kategori="<?= esc($kid) ?>">
                     <div class="img-wrap">
-                        <?php if (! empty($item['gambar'])): ?>
-                            <img src="<?= esc(base_url('uploads/menu/' . $item['gambar'])) ?>" alt="<?= esc($item['nama_menu'] ?? 'Menu') ?>">
+                        <?php if ($hasGambar): ?>
+                            <img src="<?= esc(base_url('uploads/menu/' . $gambar)) ?>" alt="<?= esc($item['nama_menu'] ?? 'Menu') ?>" loading="lazy" decoding="async">
                         <?php else: ?>
-                            <div class="no-img">
-                                <i class="fa-solid fa-image"></i>
+                            <div class="no-img" aria-hidden="true">
+                                <span class="no-img-letter"><?= esc($initial) ?></span>
+                                <span class="no-img-label">Foto menyusul</span>
                             </div>
                         <?php endif; ?>
 
-                        <div class="img-overlay"></div>
+                        <?php if ($hasGambar): ?>
+                            <div class="img-overlay"></div>
+                        <?php endif; ?>
 
                         <div class="stock-badge <?= $stok ? 'stock-ready' : 'stock-empty' ?>">
                             <?= $stok ? 'Tersedia' : 'Habis' ?>
@@ -1320,8 +1563,32 @@ $promoSyaratLabel = static function (array $promo) use ($formatRupiah): string {
                 <span>Silakan hubungi kasir atau coba beberapa saat lagi.</span>
             </div>
         <?php endif; ?>
+
+        <div id="search-empty" class="empty-state" style="display: none;">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <p>Menu tidak ditemukan</p>
+            <span>Coba cari dengan kata kunci lain (contoh: ayam, rendang, sambal).</span>
+        </div>
     </main>
 
+</div>
+
+<!-- High-Conversion Floating Cart Bar -->
+<div id="floating-cart-bar" class="floating-cart-bar" onclick="goCheckout()">
+    <div class="floating-cart-left">
+        <div class="floating-cart-icon-box">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span id="floating-cart-badge" class="floating-cart-badge">0</span>
+        </div>
+        <div class="floating-cart-info">
+            <span id="floating-cart-count" class="floating-cart-count">0 Porsi</span>
+            <strong id="floating-cart-total" class="floating-cart-total">Rp 0</strong>
+        </div>
+    </div>
+    <button type="button" class="floating-cart-btn">
+        <span>Lanjut Pesan</span>
+        <i class="fa-solid fa-arrow-right"></i>
+    </button>
 </div>
 
 <div id="bottom-nav" class="bottom-nav">
@@ -1370,6 +1637,9 @@ $promoSyaratLabel = static function (array $promo) use ($formatRupiah): string {
 
     function saveCart() {
         localStorage.setItem('arzana_cart_' + KODE_MEJA, JSON.stringify(cart));
+        if (navigator.vibrate) {
+            try { navigator.vibrate(15); } catch(e) {}
+        }
         updateAllUI();
     }
 
@@ -1471,17 +1741,82 @@ $promoSyaratLabel = static function (array $promo) use ($formatRupiah): string {
 
     function updateBottomBar() {
         const totalQty = cart.reduce((sum, item) => sum + Number(item.qty || 0), 0);
-        const navBadge = document.getElementById('nav-badge');
+        const subtotal = cart.reduce((sum, item) => sum + (Number(item.harga || 0) * Number(item.qty || 0)), 0);
+
+        const navBadge      = document.getElementById('nav-badge');
+        const floatingCart  = document.getElementById('floating-cart-bar');
+        const floatingBadge = document.getElementById('floating-cart-badge');
+        const floatingCount = document.getElementById('floating-cart-count');
+        const floatingTotal = document.getElementById('floating-cart-total');
+        const bottomNav     = document.getElementById('bottom-nav');
 
         if (totalQty > 0) {
-            navBadge.textContent = totalQty;
-            navBadge.classList.add('show');
+            if (navBadge) {
+                navBadge.textContent = totalQty;
+                navBadge.classList.add('show');
+            }
+            if (floatingBadge) floatingBadge.textContent = totalQty;
+            if (floatingCount) floatingCount.textContent = totalQty + ' Porsi Dipilih';
+            if (floatingTotal) floatingTotal.textContent = rupiah(subtotal);
+
+            if (floatingCart) floatingCart.classList.add('active');
+            if (bottomNav) bottomNav.style.transform = 'translateX(-50%) translateY(160%)';
         } else {
-            navBadge.classList.remove('show');
+            if (navBadge) navBadge.classList.remove('show');
+            if (floatingCart) floatingCart.classList.remove('active');
+            if (bottomNav) bottomNav.style.transform = 'translateX(-50%) translateY(0)';
         }
     }
 
+    // Real-Time Menu Search & Category Filter
+    const searchInput = document.getElementById('menu-search');
+    const searchClear = document.getElementById('search-clear');
+    const searchEmpty = document.getElementById('search-empty');
+    let currentKategori = 'semua';
+
+    function applyFilters() {
+        const query = (searchInput ? searchInput.value : '').trim().toLowerCase();
+        let visibleCount = 0;
+
+        if (searchClear) {
+            searchClear.style.display = query.length > 0 ? 'inline-flex' : 'none';
+        }
+
+        document.querySelectorAll('.menu-item').forEach(item => {
+            const kategoriId = item.dataset.kategori;
+            const matchesKategori = (currentKategori === 'semua' || kategoriId === currentKategori);
+
+            const title = (item.querySelector('.item-title')?.textContent || '').toLowerCase();
+            const desc  = (item.querySelector('.item-desc')?.textContent || '').toLowerCase();
+            const matchesSearch = query === '' || title.includes(query) || desc.includes(query);
+
+            if (matchesKategori && matchesSearch) {
+                item.style.display = 'flex';
+                visibleCount++;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        if (searchEmpty) {
+            searchEmpty.style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('input', applyFilters);
+    }
+
+    if (searchClear) {
+        searchClear.addEventListener('click', () => {
+            searchInput.value = '';
+            applyFilters();
+            searchInput.focus();
+        });
+    }
+
     function filterKategori(id) {
+        currentKategori = id;
         document.querySelectorAll('.category-pill').forEach(el => {
             el.classList.remove('active');
         });
@@ -1493,13 +1828,7 @@ $promoSyaratLabel = static function (array $promo) use ($formatRupiah): string {
             activeBtn.classList.add('active');
         }
 
-        document.querySelectorAll('.menu-item').forEach(item => {
-            if (id === 'semua' || item.dataset.kategori == id) {
-                item.style.display = 'flex';
-            } else {
-                item.style.display = 'none';
-            }
-        });
+        applyFilters();
     }
 
     function goCheckout() {

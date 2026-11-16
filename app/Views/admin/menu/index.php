@@ -6,14 +6,14 @@
 
     <div class="relative overflow-hidden rounded-[1.6rem] bg-white border border-[#FED7AA] backdrop-blur shadow-[0_8px_28px_rgba(62,35,20,.06)]">
         <div class="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-amber-500/20 blur-3xl"></div>
-        <div class="absolute -bottom-28 -left-24 w-72 h-72 rounded-full bg-purple-600/20 blur-3xl"></div>
+        <div class="absolute -bottom-28 -left-24 w-72 h-72 rounded-full bg-orange-500/10 blur-3xl"></div>
 
         <div class="relative p-5 lg:p-7">
             <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
                 <div>
                     <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold mb-4">
                         <i class="fa-solid fa-bowl-food"></i>
-                        Menu Restoran
+                        Menu Warung
                     </div>
 
                     <h1 class="text-2xl lg:text-4xl font-extrabold tracking-tight text-[#000000]">
@@ -26,7 +26,7 @@
                 </div>
 
                 <a href="<?= base_url('admin/menu/create') ?>"
-                   class="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#EA580C] px-5 py-3 text-sm font-bold text-[#000000] shadow-sm hover:opacity-95 transition">
+                   class="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#EA580C] px-5 py-3 text-sm font-bold text-white shadow-sm hover:bg-[#C2410C] transition">
                     <i class="fa-solid fa-plus"></i>
                     Tambah Menu
                 </a>
@@ -35,14 +35,14 @@
     </div>
 
     <?php if (session()->getFlashdata('success')): ?>
-        <div class="flex items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+        <div role="status" class="flex items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">
             <i class="fa-solid fa-circle-check"></i>
             <span><?= esc(session()->getFlashdata('success')) ?></span>
         </div>
     <?php endif; ?>
 
     <?php if (session()->getFlashdata('error')): ?>
-        <div class="flex items-center gap-3 rounded-2xl border border-red-400/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+        <div role="alert" class="flex items-center gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-800">
             <i class="fa-solid fa-circle-exclamation"></i>
             <span><?= esc(session()->getFlashdata('error')) ?></span>
         </div>
@@ -89,13 +89,19 @@
 
                                 <td class="px-5 py-4 whitespace-nowrap">
                                     <div class="flex items-center gap-3">
-                                        <?php if (! empty($m['gambar'])): ?>
-                                            <img src="<?= base_url('uploads/menu/' . $m['gambar']) ?>"
+                                        <?php
+                                            $gambar = (string) ($m['gambar'] ?? '');
+                                            $hasGambar = $gambar !== '' && is_file(FCPATH . 'uploads/menu/' . $gambar);
+                                            $initial = strtoupper(mb_substr((string) ($m['nama_menu'] ?? 'M'), 0, 1));
+                                        ?>
+                                        <?php if ($hasGambar): ?>
+                                            <img src="<?= base_url('uploads/menu/' . $gambar) ?>"
                                                  alt="<?= esc($m['nama_menu'] ?? 'Menu') ?>"
+                                                 loading="lazy" decoding="async"
                                                  class="w-12 h-12 rounded-2xl object-cover border border-[#FED7AA]">
                                         <?php else: ?>
-                                            <div class="w-12 h-12 rounded-2xl bg-[#FFF7ED] border border-[#FED7AA] flex items-center justify-center">
-                                                <i class="fa-solid fa-image text-black"></i>
+                                            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#FFF4EA] to-[#FFE6D2] border border-[#F6D9C8] flex items-center justify-center" aria-hidden="true">
+                                                <span class="text-base font-extrabold text-[#C2410C]"><?= esc($initial) ?></span>
                                             </div>
                                         <?php endif; ?>
 
@@ -138,9 +144,9 @@
                                         <button type="submit"
                                                 class="inline-flex items-center gap-2 text-[10px] font-bold px-3 py-1.5 rounded-full border uppercase tracking-wider transition
                                                 <?= ! empty($m['stok'])
-                                                    ? 'bg-sky-50 text-sky-800 border-sky-200 hover:bg-sky-500/15'
-                                                    : 'bg-red-50 text-red-800 border-red-200 hover:bg-rose-500/15' ?>">
-                                            <i class="fa-solid fa-circle text-[7px] <?= ! empty($m['stok']) ? 'text-sky-700' : 'text-red-700' ?>"></i>
+                                                    ? 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100'
+                                                    : 'bg-red-50 text-red-800 border-red-200 hover:bg-red-100' ?>">
+                                            <i class="fa-solid fa-circle text-[7px] <?= ! empty($m['stok']) ? 'text-emerald-600' : 'text-red-600' ?>"></i>
                                             <?= ! empty($m['stok']) ? 'Tersedia' : 'Habis' ?>
                                         </button>
                                     </form>
@@ -153,9 +159,9 @@
                                         <button type="submit"
                                                 class="inline-flex items-center gap-2 text-[10px] font-bold px-3 py-1.5 rounded-full border uppercase tracking-wider transition
                                                 <?= ! empty($m['is_active'])
-                                                    ? 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-500/15'
-                                                    : 'bg-slate-500/10 text-black border-slate-400/20 hover:bg-slate-500/15' ?>">
-                                            <i class="fa-solid fa-circle text-[7px] <?= ! empty($m['is_active']) ? 'text-emerald-700' : 'text-black' ?>"></i>
+                                                    ? 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100'
+                                                    : 'bg-stone-100 text-stone-600 border-stone-300 hover:bg-stone-200' ?>">
+                                            <i class="fa-solid fa-circle text-[7px] <?= ! empty($m['is_active']) ? 'text-emerald-600' : 'text-stone-500' ?>"></i>
                                             <?= ! empty($m['is_active']) ? 'Aktif' : 'Nonaktif' ?>
                                         </button>
                                     </form>
@@ -164,7 +170,7 @@
                                 <td class="px-5 py-4 text-right whitespace-nowrap">
                                     <div class="flex items-center justify-end gap-2">
                                         <a href="<?= base_url('admin/menu/edit/' . $m['id']) ?>"
-                                           class="inline-flex items-center gap-2 text-xs font-bold text-sky-800 hover:text-[#000000] bg-sky-50 hover:bg-sky-500/20 border border-sky-200 px-3 py-2 rounded-xl transition">
+                                           class="inline-flex items-center gap-2 text-xs font-bold text-sky-800 hover:text-[#1C1917] bg-sky-50 hover:bg-sky-500/20 border border-sky-200 px-3 py-2 rounded-xl transition">
                                             <i class="fa-solid fa-pen"></i>
                                             Edit
                                         </a>
@@ -175,7 +181,7 @@
                                             <?= csrf_field() ?>
 
                                             <button type="submit"
-                                                    class="inline-flex items-center gap-2 text-xs font-bold text-red-800 hover:text-[#000000] bg-red-50 hover:bg-rose-500/20 border border-red-200 px-3 py-2 rounded-xl transition">
+                                                    class="inline-flex items-center gap-2 text-xs font-bold text-red-800 hover:text-[#1C1917] bg-red-50 hover:bg-rose-500/20 border border-red-200 px-3 py-2 rounded-xl transition">
                                                 <i class="fa-solid fa-trash"></i>
                                                 Hapus
                                             </button>
@@ -200,7 +206,7 @@
                                     </div>
 
                                     <a href="<?= base_url('admin/menu/create') ?>"
-                                       class="mt-2 inline-flex items-center gap-2 rounded-2xl bg-[#EA580C] px-5 py-3 text-sm font-bold text-[#000000] shadow-sm hover:opacity-95 transition">
+                                       class="mt-2 inline-flex items-center gap-2 rounded-2xl bg-[#EA580C] px-5 py-3 text-sm font-bold text-white shadow-sm hover:bg-[#C2410C] transition">
                                         <i class="fa-solid fa-plus"></i>
                                         Tambah Menu
                                     </a>

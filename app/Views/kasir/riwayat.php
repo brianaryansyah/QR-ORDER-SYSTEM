@@ -39,7 +39,7 @@ $jsonFlags = JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP;
         <form action="<?= base_url('kasir/riwayat') ?>" method="get" class="grid grid-cols-1 lg:grid-cols-[1fr_1fr_auto] gap-4 items-end">
             <div><label class="block text-xs font-bold text-black uppercase tracking-[0.08em] mb-2">Dari Tanggal</label><input type="date" name="start_date" value="<?= esc($start_date??'') ?>" class="w-full rounded-xl bg-white border border-stone-300 px-4 py-3 text-sm font-semibold text-[#000000] focus:outline-none focus:ring-2 focus:ring-[#EA580C]/20 focus:border-[#EA580C]"></div>
             <div><label class="block text-xs font-bold text-black uppercase tracking-[0.08em] mb-2">Sampai Tanggal</label><input type="date" name="end_date" value="<?= esc($end_date??'') ?>" class="w-full rounded-xl bg-white border border-stone-300 px-4 py-3 text-sm font-semibold text-[#000000] focus:outline-none focus:ring-2 focus:ring-[#EA580C]/20 focus:border-[#EA580C]"></div>
-            <div class="flex gap-2"><button type="submit" class="inline-flex items-center justify-center gap-2 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] px-5 py-3 text-sm font-bold text-[#000000] shadow-sm"><i class="fa-solid fa-filter"></i> Terapkan</button><a href="<?= base_url('kasir/riwayat') ?>" class="inline-flex items-center justify-center gap-2 rounded-xl bg-white border border-stone-300 px-5 py-3 text-sm font-bold text-black hover:bg-stone-50"><i class="fa-solid fa-rotate-left"></i> Reset</a></div>
+            <div class="flex gap-2"><button type="submit" class="inline-flex items-center justify-center gap-2 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] px-5 py-3 text-sm font-bold text-white shadow-sm"><i class="fa-solid fa-filter"></i> Terapkan</button><a href="<?= base_url('kasir/riwayat') ?>" class="inline-flex items-center justify-center gap-2 rounded-xl bg-white border border-stone-300 px-5 py-3 text-sm font-bold text-black hover:bg-stone-50"><i class="fa-solid fa-rotate-left"></i> Reset</a></div>
         </form>
     </div>
     <div class="rounded-2xl border border-[#FED7AA] bg-white shadow-[0_8px_28px_rgba(62,35,20,.06)] overflow-hidden">
@@ -61,9 +61,9 @@ $jsonFlags = JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP;
                             <td class="px-5 py-4 text-sm font-medium text-black whitespace-nowrap">Meja <?= esc($p['nomor_meja']) ?></td>
                             <td class="px-5 py-4 whitespace-nowrap"><span class="inline-flex items-center text-[11px] font-bold px-2.5 py-1 rounded-full border bg-white text-black border-stone-300"><i class="fa-solid fa-wallet mr-1.5 text-[#EA580C]"></i><?= esc($formatMetode($p['metode_pembayaran']??'-')) ?></span></td>
                             <td class="px-5 py-4 text-sm font-extrabold text-[#000000] whitespace-nowrap"><?= $formatRupiah($p['total_harga']) ?></td>
-                            <td class="px-5 py-4 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-2"><button type="button" class="inline-flex items-center justify-center gap-2 rounded-xl bg-white border border-stone-300 px-3 py-2 text-xs font-bold text-black hover:bg-stone-50" onclick="toggleDetail('detail-<?= esc($p['id']) ?>')"><i class="fa-solid fa-eye"></i> Detail</button><button type="button" onclick='cetakStruk(<?= $jsonStruk ?>)' class="inline-flex items-center justify-center gap-2 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] px-3 py-2 text-xs font-bold text-[#000000]"><i class="fa-solid fa-print"></i> Cetak</button></div></td>
+                            <td class="px-5 py-4 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-2"><button type="button" class="inline-flex items-center justify-center gap-2 rounded-xl bg-white border border-stone-300 px-3 py-2 text-xs font-bold text-black hover:bg-stone-50" onclick="toggleDetail('detail-<?= esc($p['id']) ?>')"><i class="fa-solid fa-eye"></i> Detail</button><button type="button" onclick='cetakStruk(<?= $jsonStruk ?>)' class="inline-flex items-center justify-center gap-2 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] px-3 py-2 text-xs font-bold text-white"><i class="fa-solid fa-print"></i> Cetak</button></div></td>
                         </tr>
-                        <tr id="detail-<?= esc($p['id']) ?>" class="hidden bg-[#FFF7ED]"><td colspan="7" class="px-5 py-5"><div class="rounded-xl border border-[#FED7AA] bg-white p-5"><div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-5"><div class="flex-1"><h4 class="text-xs font-bold text-black uppercase tracking-[0.08em] mb-3">Item Pesanan</h4><ul class="space-y-2.5"><?php foreach(($p['items']??[]) as $item): ?><li class="flex items-start justify-between gap-4 text-sm"><span class="flex items-start gap-2 text-black"><i class="fa-solid fa-circle-dot text-black text-[9px] mt-1.5"></i><span><span class="font-bold text-[#000000]"><?= esc($item['nama_menu']) ?></span> <span class="text-[#EA580C] font-bold">x<?= esc($item['qty']) ?></span><?php if(!empty($item['catatan'])): ?><span class="block text-xs font-medium text-amber-900 italic mt-1">Catatan: <?= esc($item['catatan']) ?></span><?php endif; ?></span></span><span class="text-xs font-bold text-black whitespace-nowrap"><?= $formatRupiah(($item['harga']??0)*($item['qty']??0)) ?></span></li><?php endforeach; ?></ul><?php if(!empty($p['catatan'])): ?><div class="mt-4 text-xs font-medium text-amber-900 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3"><i class="fa-solid fa-note-sticky mr-1"></i> Catatan: <?= esc($p['catatan']) ?></div><?php endif; ?></div><div class="w-full lg:w-[280px] rounded-xl border border-stone-200 bg-[#FFF7ED] p-4"><h4 class="text-xs font-bold text-black uppercase tracking-[0.08em] mb-3">Ringkasan</h4><div class="space-y-2 text-sm"><div class="flex justify-between gap-4 text-black"><span>Subtotal</span><span class="font-bold text-[#000000]"><?= $formatRupiah($subtotal) ?></span></div><?php if($potongan>0): ?><div class="flex justify-between gap-4 text-emerald-800"><span>Promo</span><span class="font-bold">-<?= $formatRupiah($potongan) ?></span></div><?php endif; ?><div class="flex justify-between gap-4 text-black"><span>PPN 10%</span><span class="font-bold text-[#000000]"><?= $formatRupiah($ppn) ?></span></div><div class="border-t border-stone-200 pt-3 mt-3 flex justify-between gap-4"><span class="font-extrabold text-[#000000]">Total</span><span class="font-extrabold text-[#000000]"><?= $formatRupiah($p['total_harga']) ?></span></div></div><button type="button" onclick='cetakStruk(<?= $jsonStruk ?>)' class="mt-4 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] px-4 py-3 text-xs font-bold text-[#000000]"><i class="fa-solid fa-print"></i> Cetak Struk</button></div></div></div></td></tr>
+                        <tr id="detail-<?= esc($p['id']) ?>" class="hidden bg-[#FFF7ED]"><td colspan="7" class="px-5 py-5"><div class="rounded-xl border border-[#FED7AA] bg-white p-5"><div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-5"><div class="flex-1"><h4 class="text-xs font-bold text-black uppercase tracking-[0.08em] mb-3">Item Pesanan</h4><ul class="space-y-2.5"><?php foreach(($p['items']??[]) as $item): ?><li class="flex items-start justify-between gap-4 text-sm"><span class="flex items-start gap-2 text-black"><i class="fa-solid fa-circle-dot text-black text-[9px] mt-1.5"></i><span><span class="font-bold text-[#000000]"><?= esc($item['nama_menu']) ?></span> <span class="text-[#EA580C] font-bold">x<?= esc($item['qty']) ?></span><?php if(!empty($item['catatan'])): ?><span class="block text-xs font-medium text-amber-900 italic mt-1">Catatan: <?= esc($item['catatan']) ?></span><?php endif; ?></span></span><span class="text-xs font-bold text-black whitespace-nowrap"><?= $formatRupiah(($item['harga']??0)*($item['qty']??0)) ?></span></li><?php endforeach; ?></ul><?php if(!empty($p['catatan'])): ?><div class="mt-4 text-xs font-medium text-amber-900 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3"><i class="fa-solid fa-note-sticky mr-1"></i> Catatan: <?= esc($p['catatan']) ?></div><?php endif; ?></div><div class="w-full lg:w-[280px] rounded-xl border border-stone-200 bg-[#FFF7ED] p-4"><h4 class="text-xs font-bold text-black uppercase tracking-[0.08em] mb-3">Ringkasan</h4><div class="space-y-2 text-sm"><div class="flex justify-between gap-4 text-black"><span>Subtotal</span><span class="font-bold text-[#000000]"><?= $formatRupiah($subtotal) ?></span></div><?php if($potongan>0): ?><div class="flex justify-between gap-4 text-emerald-800"><span>Promo</span><span class="font-bold">-<?= $formatRupiah($potongan) ?></span></div><?php endif; ?><div class="flex justify-between gap-4 text-black"><span>PPN 10%</span><span class="font-bold text-[#000000]"><?= $formatRupiah($ppn) ?></span></div><div class="border-t border-stone-200 pt-3 mt-3 flex justify-between gap-4"><span class="font-extrabold text-[#000000]">Total</span><span class="font-extrabold text-[#000000]"><?= $formatRupiah($p['total_harga']) ?></span></div></div><button type="button" onclick='cetakStruk(<?= $jsonStruk ?>)' class="mt-4 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] px-4 py-3 text-xs font-bold text-white"><i class="fa-solid fa-print"></i> Cetak Struk</button></div></div></div></td></tr>
                     <?php endforeach; ?>
                 </tbody>
             </table></div>
@@ -76,6 +76,64 @@ $jsonFlags = JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP;
     function escapeHTML(v){ return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#039;"); }
     function formatRupiah(n){ return String(parseInt(n||0)).replace(/\B(?=(\d{3})+(?!\d))/g,'.'); }
     // cetakStruk sama seperti dashboard
-    function cetakStruk(d){ const w=window.open('','_blank','width=380,height=650'); if(!w) return; w.document.write('<pre>'+JSON.stringify(d,null,2)+'</pre>'); }
+    function cetakStruk(d){
+        const w = window.open('', '_blank', 'width=380,height=650');
+        if (!w) return;
+
+        let itemsHtml = '';
+        (d.items || []).forEach(it => {
+            itemsHtml += `
+                <div style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:13px;">
+                    <div style="flex:1; padding-right:8px;">${escapeHTML(it.nama_menu)}<br><span style="font-size:11px; color:#666;">${it.qty} x ${formatRupiah(it.harga)}</span></div>
+                    <div style="text-align:right; font-weight:bold;">${formatRupiah(it.subtotal)}</div>
+                </div>
+                ${it.catatan ? `<div style="font-size:11px; font-style:italic; margin-bottom:6px; color:#444;">* ${escapeHTML(it.catatan)}</div>` : ''}
+            `;
+        });
+
+        const html = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Struk ${d.kode_pesanan}</title>
+                <style>
+                    body { font-family:'Courier New', monospace; padding:20px; color:#000; width:300px; margin:0 auto; }
+                    .header { text-align:center; margin-bottom:15px; }
+                    .divider { border-top:1px dashed #000; margin:10px 0; }
+                    .info { font-size:12px; margin-bottom:10px; }
+                    .total-row { display:flex; justify-content:space-between; margin-bottom:4px; font-size:13px; }
+                    .footer { text-align:center; margin-top:20px; font-size:11px; }
+                    @media print { body { padding:0; width:100%; } .no-print { display:none; } }
+                </style>
+            </head>
+            <body onload="window.print(); setTimeout(()=>window.close(), 500);">
+                <div class="header">
+                    <div style="font-size:18px; font-weight:bold; text-transform:uppercase;">${escapeHTML(STORE_NAME)}</div>
+                    <div style="font-size:11px;">Warung Nasi Padang Asli</div>
+                </div>
+                <div class="info">
+                    <div style="display:flex; justify-content:space-between;"><span>No. Antrean:</span> <strong style="font-size:16px;">${d.nomor_antrian}</strong></div>
+                    <div>Meja: ${d.nomor_meja}</div>
+                    <div>Waktu: ${d.waktu}</div>
+                    <div>Kasir: Uda/Uni Kasir</div>
+                </div>
+                <div class="divider"></div>
+                ${itemsHtml}
+                <div class="divider"></div>
+                <div class="total-row"><span>Subtotal</span> <span>${formatRupiah(d.subtotal)}</span></div>
+                ${d.potongan > 0 ? `<div class="total-row" style="color:#000;"><span>Promo</span> <span>-${formatRupiah(d.potongan)}</span></div>` : ''}
+                <div class="total-row"><span>PPN 10%</span> <span>${formatRupiah(d.ppn)}</span></div>
+                <div class="total-row" style="font-size:16px; font-weight:bold; margin-top:6px;"><span>TOTAL</span> <span>Rp ${formatRupiah(d.total_harga)}</span></div>
+                <div class="divider"></div>
+                <div style="font-size:11px; text-align:center;">Metode: ${d.metode_label}</div>
+                <div class="footer">
+                    <p>Terima kasih atas kunjungannya!<br>Semoga harimu menyenangkan.</p>
+                </div>
+            </body>
+            </html>
+        `;
+        w.document.write(html);
+        w.document.close();
+    }
 </script>
 <?= $this->endSection() ?>

@@ -544,10 +544,22 @@ class Order extends BaseController
             $this->pesananModel
                 ->where('kode_pesanan', $orderId)
                 ->set([
-                    'status'     => 'pending',
-                    'updated_at' => date('Y-m-d H:i:s'),
+                    'status'         => 'pending',
+                    'status_pesanan' => 'batal',
+                    'updated_at'     => date('Y-m-d H:i:s'),
                 ])
                 ->update();
+
+            // Rollback promo quota if order was cancelled or expired
+            if (! empty($pesanan['kode_promo'])) {
+                $promo = $this->promoModel->findByKode($pesanan['kode_promo']);
+                if ($promo && (int) ($promo['jumlah_digunakan'] ?? 0) > 0) {
+                    $this->promoModel
+                        ->set('jumlah_digunakan', 'jumlah_digunakan - 1', false)
+                        ->where('id', $promo['id'])
+                        ->update();
+                }
+            }
         }
 
         log_message('info', 'MIDTRANS ORDER UPDATED: ' . json_encode([
@@ -560,5 +572,60 @@ class Order extends BaseController
         return $this->response
             ->setStatusCode(200)
             ->setBody('OK');
+    }
+
+    /**
+     * Check real-time order status for the customer (used by polling on sukses.php).
+     */
+    public function checkStatus(string $kode)
+    {
+        $pesanan = $this->pesananModel
+            ->where('kode_pesanan', $kode)
+            ->first();
+
+        if (! $pesanan) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Pesanan tidak ditemukan.',
+            ]);
+        }
+
+        $statusBayar   = $pesanan['status'] ?? 'pending';
+        $statusPesanan = $pesanan['status_pesanan'] ?? 'menunggu';
+        $metode        = strtolower((string) ($pesanan['metode_pembayaran'] ?? 'tunai'));
+
+        // Step 1: Menunggu Pembayaran
+        // Step 2: Dikonfirmasi & Sedang Disiapkan
+        // Step 3: Siap Diantar / Diambil
+        // Step 4: Selesai
+        $step = 1;
+        $statusText = 'Menunggu Pembayaran';
+
+        if ($statusPesanan === 'batal') {
+            $step = -1;
+            $statusText = 'Pesanan Dibatalkan';
+        } elseif ($statusPesanan === 'siap') {
+            $step = 3;
+            $statusText = 'Pesanan Siap Diantarkan!';
+        } elseif ($statusPesanan === 'selesai') {
+            $step = 4;
+            $statusText = 'Pesanan Selesai';
+        } elseif ($statusBayar === 'selesai' || $metode === 'tunai') {
+            $step = 2;
+            $statusText = 'Pesanan Sedang Disiapkan';
+        }
+
+        return $this->response->setJSON([
+            'success'        => true,
+            'kode_pesanan'   => $pesanan['kode_pesanan'],
+            'nomor_antrian'  => $pesanan['nomor_antrian'] ?? '-',
+            'status'         => $statusBayar,
+            'status_pesanan' => $statusPesanan,
+            'metode'         => $metode,
+            'step'           => $step,
+            'status_text'    => $statusText,
+            'is_paid'        => ($statusBayar === 'selesai'),
+            'is_ready'       => ($statusPesanan === 'siap'),
+        ]);
     }
 }

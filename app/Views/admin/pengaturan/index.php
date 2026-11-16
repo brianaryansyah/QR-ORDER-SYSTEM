@@ -215,7 +215,7 @@ $storeFavicon = $settings['store_favicon'] ?? '';
 
                 <div class="mt-5 flex flex-col gap-3">
                     <button type="submit"
-                            class="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-[#EA580C] px-5 py-3 text-sm font-bold text-[#000000] shadow-sm hover:opacity-95 transition">
+                            class="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-[#EA580C] px-5 py-3 text-sm font-bold text-white shadow-sm hover:bg-[#C2410C] transition">
                         <i class="fa-solid fa-floppy-disk"></i>
                         Simpan Pengaturan
                     </button>

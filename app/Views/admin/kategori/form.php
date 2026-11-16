@@ -106,7 +106,7 @@
 
                 <div class="flex flex-col sm:flex-row sm:items-center gap-3 mt-7 pt-6 border-t border-[#FED7AA]">
                     <button type="submit"
-                            class="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#EA580C] px-5 py-3 text-sm font-bold text-[#000000] shadow-sm hover:opacity-95 transition">
+                            class="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#EA580C] px-5 py-3 text-sm font-bold text-white shadow-sm hover:bg-[#C2410C] transition">
                         <i class="fa-solid fa-floppy-disk"></i>
                         <?= $isEdit ? 'Simpan Perubahan' : 'Tambah Kategori' ?>
                     </button>

@@ -41,11 +41,11 @@ class Auth extends BaseController
                 return redirect()->to($user['role'] . '/dashboard');
                 
             } else {
-                $session->setFlashdata('msg', 'Password salah.');
+                $session->setFlashdata('msg', 'Username atau password salah.');
                 return redirect()->to('/auth');
             }
         } else {
-            $session->setFlashdata('msg', 'Username tidak ditemukan.');
+            $session->setFlashdata('msg', 'Username atau password salah.');
             return redirect()->to('/auth');
         }
     }

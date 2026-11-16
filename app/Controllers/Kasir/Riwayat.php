@@ -38,13 +38,18 @@ class Riwayat extends BaseController
         $riwayat = $builder->orderBy('pesanans.updated_at', 'DESC')->get()->getResultArray();
 
         $totalPendapatan = 0;
-        $totalPesanan = count($riwayat);
+        $totalPesanan    = count($riwayat);
 
-        foreach ($riwayat as &$r) {
-            $r['items'] = $this->itemModel->getByPesanan($r['id']);
-            $totalPendapatan += $r['total_harga'];
+        if (! empty($riwayat)) {
+            $riwayatIds = array_map('intval', array_column($riwayat, 'id'));
+            $itemsMap   = $this->itemModel->getByPesananIds($riwayatIds);
+
+            foreach ($riwayat as &$r) {
+                $r['items']       = $itemsMap[$r['id']] ?? [];
+                $totalPendapatan += (int) ($r['total_harga'] ?? 0);
+            }
+            unset($r);
         }
-        unset($r);
 
         $data = [
             'title'            => 'Riwayat Transaksi — NasPad Zendry',
